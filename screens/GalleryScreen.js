@@ -1,11 +1,11 @@
 import React, {useState, useEffect} from 'react';
 import { View, Text, StyleSheet, ScrollView, Image } from 'react-native';
 import { Button, Card } from 'react-native-elements';
-// import Icon from 'react-native-vector-icons/FontAwesome';
-// import {connect} from 'react-redux';
+
+import {connect} from 'react-redux';
 // import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export default function GalleryScreen() {
+function GalleryScreen(props) {
 
 var listGallery = [{img:require('../assets/picture-1.jpg') , genre:'Homme', age: '70 ans', mood: 'Joyeux !', hair:'Cheveux gris'},
 {img:require('../assets/picture-2.jpg') , genre:'Femme', age: '34 ans', mood: 'Joyeux !', hair:'Cheveux chatain'},
@@ -35,10 +35,24 @@ var listGallery = [{img:require('../assets/picture-1.jpg') , genre:'Homme', age:
         
       });
 
+      var cardImage = props.photoList.map((e, i) => {
+        return (<Card key={i} style={styles.card}>
+            <Card.Image source={{uri: e}}/>
+            <Card.Divider/>
+            <Button
+                buttonStyle={styles.button}
+                title='My picture' />
+            <Button
+                buttonStyle={styles.button}
+                title={i} />
+        </Card>);
+      })
+
     return (
         <View style={styles.container}>
             <Text style={styles.text}> Valentine's Gallery</Text>
             <ScrollView style={{flex : 1, marginTop: 20}}>
+                {cardImage}
                 {card}
             </ScrollView>
         </View>
@@ -70,3 +84,12 @@ const styles = StyleSheet.create({
         backgroundColor : "#009788",
     },
   });
+
+  function mapStateToProps(state) {
+    return { photoList: state.photoList}
+    }
+
+  export default connect(
+    mapStateToProps, 
+      null
+  )(GalleryScreen);

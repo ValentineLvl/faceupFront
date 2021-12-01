@@ -6,10 +6,10 @@ import { Ionicons, FontAwesome } from '@expo/vector-icons';
 import { Button, Overlay } from 'react-native-elements';
 import { useIsFocused } from '@react-navigation/native';
 
-// import {connect} from 'react-redux';
+import {connect} from 'react-redux';
 // import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export default function SnapScreen() {
+function SnapScreen(props) {
 
     const [hasPermission, setHasPermission] = useState(null);
     const [type, setType] = useState(Camera.Constants.Type.back);
@@ -77,17 +77,36 @@ export default function SnapScreen() {
                 buttonStyle={{backgroundColor: "#009788"}}
                 type="solid"
                 onPress={async () => {
+                    
                     if (cameraRef) {
-                        setVisible(!visible);
+                        setVisible(true);
                       let photo = await cameraRef.takePictureAsync({
-                        quality : 0.7,
+                        quality : 0.5,
                         base64: true,
                         exif: true
                        });
                        console.log(photo.uri);  
-                       if (photo.uri) {
-                        setVisible(false);}  
+
+                  if (photo.uri) {  
+                      var data = new FormData();
+
+                        data.append('photo', {
+                        uri: photo.uri,
+                        type: 'image/jpeg',
+                        name: 'user_photo.jpg',
+                        });
+
+                        const dataFetch = await fetch("http://172.17.1.136:3000/upload", {
+                        method: 'post',
+                        body: data
+                        })
+                        const fetchData = await dataFetch.json();
+                        console.log(fetchData);
+                        if (fetchData) {
+                    setVisible(false)} } 
+                    props.onSubmitPhoto(photo.uri);
                     } 
+                    
                     }
                    }
             />
@@ -122,3 +141,16 @@ const styles = StyleSheet.create({
         
     },
   });
+
+function mapDispatchToProps(dispatch) {
+    return {
+      onSubmitPhoto: function(photo) { 
+        dispatch( {type: 'savePhoto', photo: photo }) 
+      }
+    }
+  }
+
+  export default connect(
+    null, 
+      mapDispatchToProps
+  )(SnapScreen);
