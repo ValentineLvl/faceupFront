@@ -37,20 +37,26 @@ var listGallery = [{img:require('../assets/picture-1.jpg') , genre:'Homme', age:
 
       var cardImage = props.photoList.map((e, i) => {
         return (<Card key={i} style={styles.card}>
-            <Card.Image source={{uri: e}}/>
+            <Card.Image source={{uri: e.url}} 
+            //style={{transform:  [{ rotate:'90deg' }]}}
+            />
             <Card.Divider/>
+            {e.desc.map((el, i) => (
+            <View key={i}>
+            <Button 
+                buttonStyle={styles.button}
+                title={el.gender} />
             <Button
                 buttonStyle={styles.button}
-                title='My picture' />
-            <Button
-                buttonStyle={styles.button}
-                title={i} />
+                title={el.age} />
+                </View>
+            ))}
         </Card>);
       })
 
     return (
         <View style={styles.container}>
-            <Text style={styles.text}> Valentine's Gallery</Text>
+            <Text style={styles.text}> {props.pseudo}'s Gallery</Text>
             <ScrollView style={{flex : 1, marginTop: 20}}>
                 {cardImage}
                 {card}
@@ -86,7 +92,7 @@ const styles = StyleSheet.create({
   });
 
   function mapStateToProps(state) {
-    return { photoList: state.photoList}
+    return { photoList: state.photoList, pseudo: state.pseudo}
     }
 
   export default connect(

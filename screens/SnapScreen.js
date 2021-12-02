@@ -85,7 +85,7 @@ function SnapScreen(props) {
                         base64: true,
                         exif: true
                        });
-                       console.log(photo.uri);  
+                       // console.log(photo.uri);  
 
                   if (photo.uri) {  
                       var data = new FormData();
@@ -101,10 +101,11 @@ function SnapScreen(props) {
                         body: data
                         })
                         const fetchData = await dataFetch.json();
-                        console.log(fetchData);
+                        //console.log(fetchData.result.detectedFaces[0].age);
+                        props.onSubmitPhoto(fetchData.url, fetchData.result.detectedFaces);
                         if (fetchData) {
                     setVisible(false)} } 
-                    props.onSubmitPhoto(photo.uri);
+                   
                     } 
                     
                     }
@@ -144,8 +145,8 @@ const styles = StyleSheet.create({
 
 function mapDispatchToProps(dispatch) {
     return {
-      onSubmitPhoto: function(photo) { 
-        dispatch( {type: 'savePhoto', photo: photo }) 
+      onSubmitPhoto: function(photo, desc) { 
+        dispatch( {type: 'savePhoto', photo, desc }) 
       }
     }
   }

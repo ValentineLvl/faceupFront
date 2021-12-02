@@ -2,12 +2,12 @@ import React, {useState, useEffect} from 'react';
 import { View, ImageBackground, StyleSheet, Text } from 'react-native';
 import { Button, Input } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
-// import {connect} from 'react-redux';
+import {connect} from 'react-redux';
 // import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export default function HomeScreen(props) {
+function HomeScreen(props) {
 
-//     const [pseudo, setPseudo] = useState('');
+const [pseudo, setPseudo] = useState('');
 //     const [pseudoSubmited, setPseudoSubmited] = useState(false);
 
 //     useEffect(() => {
@@ -76,13 +76,14 @@ export default function HomeScreen(props) {
        size={24}
        color='#009788'
    />}
+   onChangeText={(val) => setPseudo(val)}
    />
 
      <Button 
      title="Go to Gallery"
      type="solid"
      buttonStyle = {{backgroundColor : "#009788"}}
-     onPress={() => props.navigation.navigate('BottomNavigator',{screen : 'Gallery'})}
+     onPress={() => {props.onSubmitPseudo(pseudo); props.navigation.navigate('BottomNavigator',{screen : 'Gallery'})}}
      />
     
  </ImageBackground>
@@ -111,15 +112,15 @@ export default function HomeScreen(props) {
   //   return { pseudo: state.pseudo}
   //   }
 
-  // function mapDispatchToProps(dispatch) {
-  //   return {
-  //     onSubmitPseudo: function(pseudo) { 
-  //       dispatch( {type: 'savePseudo', pseudo: pseudo }) 
-  //     }
-  //   }
-  // }
+  function mapDispatchToProps(dispatch) {
+    return {
+      onSubmitPseudo: function(pseudo) { 
+        dispatch( {type: 'savePseudo', pseudo: pseudo }) 
+      }
+    }
+  }
   
-  // export default connect(
-  //   mapStateToProps, 
-  //     mapDispatchToProps
-  // )(HomeScreen);
+  export default connect(
+    null, 
+      mapDispatchToProps
+  )(HomeScreen);
